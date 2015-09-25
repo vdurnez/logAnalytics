@@ -22,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class QueriesApi {
     @RequestMapping(value = "/count/{datePattern}", method = RequestMethod.GET)
     public CountDTO countInTimeRange(@PathVariable("datePattern") String datePattern) throws IOException {
         logger.info("start 1/queries/count/" + datePattern);
+        LocalDateTime start = LocalDateTime.now();
 
         DateRangeUtils.DateRange dateRange = DateRangeUtils.getRange(datePattern);
         if (dateRange == null) {
@@ -65,7 +68,10 @@ public class QueriesApi {
         }
 
         int cardinality = streamDistinctElements.cardinality();
-        logger.info("end 1/queries/count/" + datePattern + " - " + cardinality);
+
+        LocalDateTime end = LocalDateTime.now();
+        long durationMilliseconds = Duration.between(start, end).toMillis();
+        logger.info("end 1/queries/count/" + datePattern + " - " + cardinality + " duration=" + durationMilliseconds + " ms");
 
         return new CountDTO(cardinality);
     }
@@ -82,6 +88,7 @@ public class QueriesApi {
     @RequestMapping(value = "/popular/{datePattern}", method = RequestMethod.GET)
     public QueriesDTO getPopular(@PathVariable("datePattern") String datePattern, @RequestParam(value = "size", defaultValue = "10") int size) throws IOException {
         logger.info("start 1/queries/popular/" + datePattern + " size=" + size);
+        LocalDateTime start = LocalDateTime.now();
 
         DateRangeUtils.DateRange dateRange = DateRangeUtils.getRange(datePattern);
         if (dateRange == null) {
@@ -118,7 +125,9 @@ public class QueriesApi {
             result.addQueryCount((String) topElement.element, topElement.count);
         }
 
-        logger.info("end 1/queries/popular/" + datePattern + " size=" + size + " - " + result);
+        LocalDateTime end = LocalDateTime.now();
+        long durationMilliseconds = Duration.between(start, end).toMillis();
+        logger.info("end 1/queries/popular/" + datePattern + " size=" + size + " duration=" + durationMilliseconds + " ms - " + result);
 
         return result;
     }
