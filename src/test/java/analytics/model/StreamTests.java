@@ -1,6 +1,5 @@
 package analytics.model;
 
-import analytics.log.LogLine;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,10 +20,8 @@ public class StreamTests {
         StreamDistinctElements streamDistinctElements = new StreamDistinctElements();
 
         String line;
-        //int lineIdx=0;
         while ((line = bufferedReader.readLine()) != null) {
-            LogLine logLine = LogLine.readLine(line);
-            streamDistinctElements.addElement(logLine.content);
+            streamDistinctElements.addElement(line.split("\\t")[1]);
         }
 
         Assert.assertEquals(486, streamDistinctElements.cardinality());
@@ -39,8 +36,7 @@ public class StreamTests {
 
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            LogLine logLine = LogLine.readLine(line);
-            stringStreamTopElements.addElement(logLine.content);
+            stringStreamTopElements.addElement(line.split("\\t")[1]);
 
             checkConsistency(stringStreamTopElements.getElementsOrdered());
         }

@@ -11,7 +11,11 @@ Application is built with spring-boot & java 8
 
 ### How-to start
 `mvn spring-boot:run -D logfile=fileName.tsv`
-where fileName.tsv is log file (tabular only), default value is "/tmp/logs.tsv"
+
+log file
+* "logfile" parameter default value is "/tmp/logs.tsv" 
+* log file line format is "timestamp <tab> item" where timestamp format is "yyyy-MM-dd HH:mm:ss"
+* log file MUST have ordered timestamps (if not, do "sort -k1 file > fileSorted")
 
 Then execute queries on localhost:8080
 * http://localhost:8080/1/queries/count/2015-08-02
@@ -28,6 +32,6 @@ capacity is set to 5.000 to have good approximate answer
 
 ## Limitations, improvements
 Application reads 1 logs file at each query (declared by parameter "logfile")
-logs input could be time-indexed to improve performance
+logs input is time-indexed at startup (minute-level) to improve performance.
 
 Count distinct queries provides an exact value but with a big memory footprint 
