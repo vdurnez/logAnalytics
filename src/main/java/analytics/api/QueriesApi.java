@@ -1,6 +1,7 @@
 package analytics.api;
 
 import analytics.AnalyticsConfiguration;
+import analytics.log.DateRangeUtils;
 import analytics.log.LogLine;
 import analytics.model.StreamDistinctElements;
 import analytics.model.StreamTopElements;

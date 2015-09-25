@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // @RunWith(SpringJUnit4ClassRunner.class)
@@ -26,7 +27,7 @@ public class StreamTests {
             streamDistinctElements.addElement(logLine.content);
         }
 
-        System.out.println(streamDistinctElements.cardinality());
+        Assert.assertEquals(486, streamDistinctElements.cardinality());
 
     }
 
@@ -34,20 +35,18 @@ public class StreamTests {
     public void testTopElements() throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("test_500.tsv")));
 
-        StreamTopElements<String> stringStreamTopElements = new StreamTopElements<String>(50);
+        StreamTopElements<String> stringStreamTopElements = new StreamTopElements<String>(500);
 
         String line;
-        //int lineIdx=0;
         while ((line = bufferedReader.readLine()) != null) {
             LogLine logLine = LogLine.readLine(line);
-            //System.out.println(lineIdx);
-            //lineIdx++;
             stringStreamTopElements.addElement(logLine.content);
 
             checkConsistency(stringStreamTopElements.getElementsOrdered());
         }
 
-        System.out.println(stringStreamTopElements.topElementsWithCount(5));
+        List<StreamTopElements<String>.Count> topElements = stringStreamTopElements.topElementsWithCount(5);
+        Assert.assertEquals(3, topElements.get(0).count);
     }
 
     private <T> void checkConsistency(StreamLinkedList<StreamTopElements<String>.Count> elementsOrdered) {
